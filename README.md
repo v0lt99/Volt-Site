@@ -1029,7 +1029,7 @@
                     <h1 id="text01">Volt Site</h1>
                     <p id="text02">Welcome to Volt site</p>
                     <p id="text03">
-                        you can email voltflare3@gmail.com for future updates
+                        you can email me for future updates at @voltflare3
                     </p>
                     <ul id="buttons03" class="buttons">
                         <li>
