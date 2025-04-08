@@ -1,10 +1,10 @@
 <!DOCTYPE HTML>
 <html lang="en">
     <head>
-     <div class="search-container">
+</div>
+           <div class="search-container">
     <input type="text" id="searchBox" placeholder="Search...">
     <button onclick="searchFunction()">Search🔍</button>
-</div>
 </div>
         <title>Volt Site</title>
         <meta charset="utf-8"/>
