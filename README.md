@@ -2374,9 +2374,7 @@
             )();
         </script>
     </body>
-</html>
-<footer>
-    <input type="text" id="searchBox" placeholder="Quick Search...">
-    <button onclick="searchFunction()">Search</button>
-</footer>
-
+<form action="https://www.Bing.com/search" method="GET">
+    <input type="Quick Search" name="q" placeholder="Search Bing...">
+    <button type="Enter">Search</button>
+</form>
