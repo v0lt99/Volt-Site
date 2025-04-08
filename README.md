@@ -1,6 +1,10 @@
 <!DOCTYPE HTML>
 <html lang="en">
     <head>
+     <div class="search-container">
+    <input type="text" id="searchBox" placeholder="Search...">
+    <button onclick="searchFunction()">Search🔍</button>
+</div>
 </div>
         <title>Volt Site</title>
         <meta charset="utf-8"/>
@@ -2375,8 +2379,3 @@
             )();
         </script>
     </body>
-
-<form action="https://www.bing.com/search" method="GET">
-    <input type="text" name="q" placeholder="Search Bing...">
-    <button type="Enter">Search</button>
-</form>
