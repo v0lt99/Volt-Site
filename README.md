@@ -1075,12 +1075,6 @@
                         </ul>
                     </div>
                 </div>
-            </div>
-</button>
-**
-</button>
-
-</button>
         </div>
         <script>
             (function() {
