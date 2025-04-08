@@ -1029,8 +1029,7 @@
                     <h1 id="text01">Volt Site</h1>
                     <p id="text02">Welcome to Volt site</p>
                     <p id="text03">
-                        you can email <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="34425b5840525855465107745359555d581a575b59">[email &#160;protected]</a>
-                        for future updates
+                        you can email voltflare3@gmail.com for future updates
                     </p>
                     <ul id="buttons03" class="buttons">
                         <li>
@@ -1077,7 +1076,13 @@
                     </div>
                 </div>
             </div>
-            <a href="mailto:example@email.com">Send Email</a>
+        **<button onclick="window.location.href='mailto:your-voltflare3@gmail.com?subject=Hello&body=Someone wants to talk with you "!';">
+    Chat with me
+</button>
+**
+</button>
+
+</button>
         </div>
         <script>
             (function() {
