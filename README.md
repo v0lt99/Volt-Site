@@ -1075,11 +1075,6 @@
                             </li>
                         </ul>
                     </div>
-                    <div id="credits" class="icc-credits">
-                        <span>
-                            <a href="https://carrd.co/build?ref=auto">Made with Carrd</a>
-                        </span>
-                    </div>
                 </div>
             </div>
         </div>
