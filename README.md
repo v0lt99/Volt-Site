@@ -5,11 +5,11 @@
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width,initial-scale=1"/>
         <meta name="color-scheme" content="light only"/>
-        <meta name="description" content="this is a test site"/>
+        <meta name="description" content="This is Volt Site"/>
         <meta property="og:site_name" content="Volt Site"/>
         <meta property="og:title" content="Volt Site"/>
         <meta property="og:type" content="website"/>
-        <meta property="og:description" content="this is a test site"/>
+        <meta property="og:description" content="This is Volt Site"/>
         <meta property="og:image" content="https://voldiagonyt.com/assets/images/card.jpg?v=6336a318"/>
         <meta property="og:image:type" content="image/jpeg"/>
         <meta property="og:image:width" content="1280"/>
