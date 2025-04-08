@@ -1077,8 +1077,8 @@
                     </div>
                 </div>
             </div>
+            <a href="mailto:example@email.com">Send Email</a>
         </div>
-        <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
         <script>
             (function() {
                 var on = addEventListener
