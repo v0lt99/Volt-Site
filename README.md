@@ -2381,3 +2381,8 @@
         </script>
     </body>
 </html>
+<footer>
+    <input type="text" id="searchBox" placeholder="Quick Search...">
+    <button onclick="searchFunction()">Search</button>
+</footer>
+
