@@ -1076,8 +1076,6 @@
                     </div>
                 </div>
             </div>
-        **<button onclick="window.location.href='mailto:your-voltflare3@gmail.com?subject=Hello&body=Someone wants to talk with you "!';">
-    Chat with me
 </button>
 **
 </button>
