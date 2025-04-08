@@ -1,6 +1,11 @@
-pip install flask
-<form action="http://localhost:5000/process" method="post">
-    <input type="HTML" name="Volt-Site">
-    <button type="submit">Submit</button>
-</form>
+from flask import Flask
+
+app = Flask(__Volt-Site__)
+
+@app.route("/")
+def home():
+    return "<h1>Hello, this is Python sending text to the web!</h1>"
+
+if __name__ == "__main__":
+    app.run(debug=True)
 print("launched successfuly!")
