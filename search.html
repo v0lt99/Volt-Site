@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Search - Volt Site</title>
+  <style>
+    body {
+      background: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    /* Branding */
+    .brand {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 24px;
+    }
+    .brand a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    /* Search box */
+    .search-box {
+      margin-top: 100px;
+    }
+    .search-box input {
+      width: 60%;
+      padding: 15px;
+      font-size: 20px;
+      border-radius: 40px;
+      border: none;
+      outline: none;
+      text-align: center;
+    }
+
+    /* Results */
+    #results {
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+    .result {
+      background: rgb(20, 0, 255);
+      padding: 20px;
+      width: 60%;
+      border-radius: 15px;
+      text-align: left;
+    }
+    .result b {
+      font-size: 18px;
+    }
+    .result h6 {
+      margin: 8px 0;
+      font-weight: normal;
+    }
+    .result button {
+      background: #fff;
+      color: rgb(20,0,255);
+      border: none;
+      padding: 8px 15px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .result button:hover {
+      background: #ddd;
+    }
+  </style>
+</head>
+<body>
+  <!-- Branding -->
+  <div class="brand">
+    <a href="index.html">Volt Site</a>
+  </div>
+
+  <!-- Search box -->
+  <div class="search-box">
+    <form id="searchForm">
+      <input type="text" id="query" placeholder="Search Volt Site..." />
+    </form>
+  </div>
+
+  <!-- Results -->
+  <div id="results"></div>
+
+  <script>
+    // Volt Site data
+    const siteData = [
+      { name: "Home", desc: "Visit the home page", url: "index.html" },
+      { name: "Satellites", desc: "Explore satellites info on Volt Site", url: "satellites.html" },
+      { name: "Content", desc: "Second layer of content in Volt Site", url: "content.html" },
+      { name: "Updates", desc: "View the latest updates in Volt Site", url: "updates.html" },
+      { name: "Example Satelite", desc: "This is an example satelite", url: "Satelites/Volt/Example.html" }
+    ];
+
+    const searchForm = document.getElementById("searchForm");
+    const queryInput = document.getElementById("query");
+    const resultsDiv = document.getElementById("results");
+
+    // Function to render results
+    function renderResults(q) {
+      resultsDiv.innerHTML = "";
+      const query = q.toLowerCase();
+
+      const matches = siteData.filter(item =>
+        item.name.toLowerCase().includes(query) ||
+        item.desc.toLowerCase().includes(query)
+      );
+
+      if (matches.length === 0) {
+        resultsDiv.innerHTML = `<p>No results found for "${q}".</p>`;
+        return;
+      }
+
+      matches.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "result";
+        div.innerHTML = `
+          <b>${item.name}</b>
+          <h6>${item.desc}</h6>
+          <a href="${item.url}" target="_blank"><button>Visit</button></a>
+        `;
+        resultsDiv.appendChild(div);
+      });
+    }
+
+    // Load query from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const q = urlParams.get("q");
+    if (q) {
+      queryInput.value = q;
+      renderResults(q);
+    }
+
+    // Handle form submit
+    searchForm.addEventListener("submit", e => {
+      e.preventDefault();
+      const q = queryInput.value.trim();
+      if (!q) return;
+      window.history.replaceState({}, "", `?q=${encodeURIComponent(q)}`);
+      renderResults(q);
+    });
+  </script>
+</body>
+</html>
