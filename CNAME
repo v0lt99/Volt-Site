@@ -1,4 +1,3 @@
-Type:   CNAME
-Name:   v0lt99.github.io
-Value:  v0lt99.github.io
-TTL:    3600
+Host: google-site-verification=abc123xyz
+Type: CNAME
+Points to: google.com
