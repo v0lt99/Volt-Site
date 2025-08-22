@@ -1,26 +1,5 @@
-<head>
-  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-  <link rel="stylesheet" href="style.css">
-  <script>
-    (function(){
-      emailjs.init("H7c8j4azSTlZwOT-O");
-    })();
-
-    function sendMail(event) {
-      event.preventDefault();
-
-      emailjs.sendForm("volt_service", "template_yiiw8ul", event.target)
-        .then(() => {
-          alert("✅ Successfully saved changes! check your satelite link later");
-        }, (error) => {
-          alert("❌ Could not save: " + JSON.stringify(error));
-        });
-    }
-  </script>
-</head>
-<link rel="stylesheet" href="style.css">
-<form onsubmit="sendMail(event)">
-  <input name="satelite-name" type="text" placeholder="Satelite name" required><br>
-  <textarea name="satelite-description" placeholder="Satelite description" required></textarea><br>
-  <button type="submit" class="btn">Publish</button>
+<form action="https://docs.google.com/forms/u/0/d/e/1FAIpQLScTylNYLbl4fF0qqYZnbv9db2bLcRX_JX1bpjh01pOOn0KWyw/formResponse" method="POST" target="_self">
+  <input type="text" name="entry.536708871" placeholder="Name" required><br><br>
+  <textarea name="entry.1701595797" placeholder="Description" required></textarea><br><br>
+  <button type="submit">Submit</button>
 </form>
