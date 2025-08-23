@@ -1,10 +1,10 @@
 site: {
         "name": "Volt-Site",
-        "version": "1.0.2",
+        "version": "1.0.9",
         "description": "A site built by Volt Flare as a copy of Volt-Site on google sites",
         "main": "index.html",
         "scripts": {
-            "start": "volt start"
+            "start": "vs run"
         },
 }
 
@@ -17,10 +17,10 @@ author:
 {
   "name": "Volt Flare",
   "email": "voltflare3@gmail.com",
-  "url": "https://sites.google.com/view/voldiagon-site/main"
-  "license": "Developer-Defined"
+  "url": "https://v0lt99.github.io/Volt-Site"
+  "license": "MIT"
   "repository": {
                   "type": "git",
-                  "url": "v0lt99/Volt-Site-git"
+                  "url": "v0lt99/Volt-Site"
   }
 }
