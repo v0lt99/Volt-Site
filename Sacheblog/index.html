@@ -2,143 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SacheBlog</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      padding: 2rem;
-    }
-    button {
-      background-color: #0078D4;
-      color: white;
-      border: none;
-      padding: 0.5rem 1rem;
-      cursor: pointer;
-      margin-top: 1rem;
-    }
-    .hidden {
-      display: none;
-    }
-    .post {
-      border: 1px solid #ccc;
-      padding: 1rem;
-      margin-top: 1rem;
-    }
-  </style>
+  <title>SacheBlog - Sign In</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
-  <!-- Signup Form -->
-  <form id="signupForm">
-    <h2>Sign Up</h2>
-    <input type="text" name="name" placeholder="Name" required /><br />
-    <input type="email" name="email" placeholder="Email" required /><br />
-    <input type="password" name="password" placeholder="Password" required /><br />
-    <button type="submit">Sign Up</button>
-  </form>
-
-  <!-- Signin Form -->
-  <form id="signinForm" class="hidden">
-    <h2>Sign In</h2>
+  <h2>Sign In</h2>
+  <form id="signinForm">
     <input type="email" name="email" placeholder="Email" required /><br />
     <input type="password" name="password" placeholder="Password" required /><br />
     <button type="submit">Sign In</button>
   </form>
+  <p>Don't have an account? <a href="signup.html">Sign up here</a></p>
 
-  <!-- Welcome Message -->
-  <div id="welcomeMessage" class="hidden"></div>
-
-  <!-- Dashboard -->
-  <div id="dashboard" class="hidden">
-    <h2>Dashboard</h2>
-    <button onclick="showPostForm()">+ New Post</button>
-    <div id="postForm" class="hidden">
-      <form onsubmit="submitPost(event)">
-        <input type="text" name="title" placeholder="Post Title" required /><br />
-        <textarea name="content" placeholder="Write your post here..." rows="6"></textarea><br />
-        <input type="text" name="tags" placeholder="Tags (comma-separated)" /><br />
-        <button type="submit">Publish</button>
-      </form>
-    </div>
-    <div id="postList"></div>
-  </div>
-
-  <script>
-    // Internal storage simulation
-    const database = {};
-    const posts = [];
-
-    function generateVSID() {
-      return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
-    }
-
-    // Signup Logic
-    document.getElementById('signupForm').onsubmit = function(e) {
-      e.preventDefault();
-      const name = e.target.name.value;
-      const email = e.target.email.value;
-      const password = e.target.password.value;
-      const vsid = generateVSID();
-
-      database[email] = { name, email, password, vsid };
-      alert('Signup successful!');
-      e.target.reset();
-      document.getElementById('signupForm').classList.add('hidden');
-      document.getElementById('signinForm').classList.remove('hidden');
-    };
-
-    // Signin Logic
-    document.getElementById('signinForm').onsubmit = function(e) {
-      e.preventDefault();
-      const email = e.target.email.value;
-      const password = e.target.password.value;
-
-      const user = database[email];
-      if (user && user.password === password) {
-        showWelcome(user.name);
-      } else {
-        alert('Invalid credentials');
-      }
-    };
-
-    function showWelcome(name) {
-      document.getElementById('signinForm').classList.add('hidden');
-      const welcome = document.getElementById('welcomeMessage');
-      welcome.innerHTML = `<h1 style="text-align:center;font-size:3rem;">Welcome back, ${name}</h1>`;
-      welcome.classList.remove('hidden');
-      setTimeout(() => {
-        welcome.classList.add('hidden');
-        document.getElementById('dashboard').classList.remove('hidden');
-      }, 2000);
-    }
-
-    function showPostForm() {
-      document.getElementById('postForm').classList.remove('hidden');
-    }
-
-    function submitPost(e) {
-      e.preventDefault();
-      const title = e.target.title.value;
-      const content = e.target.content.value;
-      const tags = e.target.tags.value.split(',').map(tag => tag.trim());
-
-      posts.push({ title, content, tags, author: 'Volt', timestamp: new Date() });
-      renderPosts();
-      e.target.reset();
-      document.getElementById('postForm').classList.add('hidden');
-    }
-
-    function renderPosts() {
-      const postList = document.getElementById('postList');
-      postList.innerHTML = posts.map(post => `
-        <div class="post">
-          <h3>${post.title}</h3>
-          <p>${post.content}</p>
-          <small>Tags: ${post.tags.join(', ')}</small>
-        </div>
-      `).join('');
-    }
-  </script>
+  <script src="app.js"></script>
 </body>
 </html>
