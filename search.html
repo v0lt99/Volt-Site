@@ -146,10 +146,13 @@
       const q = query.toLowerCase();
 
       if (q.includes("bug")) {
-        return `Bugs are everywhere, the two bugs are;
-        - formal bugs(developer mistakes)
-        - informal bugs(viruses planted by hackers)
-        I, report to the admin.`;
+        return `
+        <strong>Bugs are everywhere</strong><br><br>
+        The two bugs are:<br>
+        &nbsp;&nbsp;- <b>Formal bugs</b>(developer mistakes)<br>
+        &nbsp;&nbsp;- <b>Informal bugs</b>(viruses planted by hackers)<br><br>
+        If you see a bug, report to the admin.
+        `;
       } else if (q.includes("hi")) {
         return "Hello i am Sache AI, nice to meet you."
       } else if (q.includes("code")) {
