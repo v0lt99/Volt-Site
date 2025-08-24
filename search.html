@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Search - Volt Site</title>
+  <link rel="stylesheet" href="style.css">
   <style>
     body {
       background: #000;
@@ -36,6 +37,18 @@
       border: none;
       outline: none;
       text-align: center;
+    }
+
+    #aiResponse {
+      margin-top: 40px;
+      padding: 20px;
+      background: #111;
+      border: 2px solid #0ff;
+      border-radius: 15px;
+      width: 60%;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
     }
 
     #results {
@@ -81,6 +94,12 @@
     .result button:hover {
       background: #ddd;
     }
+
+    .no-results {
+      color: #aaa;
+      margin-top: 40px;
+      font-size: 18px;
+    }
   </style>
 </head>
 <body>
@@ -92,15 +111,20 @@
   <!-- Search box -->
   <div class="search-box">
     <form id="searchForm">
-      <input type="text" id="query" placeholder="Search Volt Site..." />
+      <input type="text" id="query" placeholder="Search Volt Site...">
     </form>
+  </div>
+
+  <!-- AI Response -->
+  <div id="aiResponse" style="display:none;">
+    <h3>AI response:</h3>
+    <div id="aiText"></div>
   </div>
 
   <!-- Results -->
   <div id="results"></div>
 
   <script>
-    // Volt Site Sections
     const VoltSite = {
       Pages: [
         { name: "Home", desc: "Visit the home page", url: "index.html" },
@@ -116,12 +140,38 @@
     const searchForm = document.getElementById("searchForm");
     const queryInput = document.getElementById("query");
     const resultsDiv = document.getElementById("results");
+    const aiResponseDiv = document.getElementById("aiResponse");
+    const aiText = document.getElementById("aiText");
+
+    function generateAIResponse(query) {
+      const q = query.toLowerCase();
+
+      if (q.includes("bug")) {
+        return "Bugs are everywhere, some are just developer mistakes, while some are viruses planted by hackers. Be careful where you go.";
+      } else if (q.includes("hi")) {
+        return "Hello i am Sache, nice to meet you."
+      } else if (q.includes("code")) {
+        return "Volt Site uses modular JavaScript objects to organize sections. Search logic parses names and descriptions dynamically.";
+      } else if (q.includes("updates")) {
+        return "Latest updates are listed in updates.html. They include new satellite entries and improved search filtering.";
+      } else if (q.includes("anouncement")) {
+        return "Anouncements are words that developers try to tell you, that is why they always add a by: tag"
+      } else {
+        return "Sorry, I was not taught that yet.";
+      }
+    }
 
     function renderResults(q) {
       resultsDiv.innerHTML = "";
       const query = q.toLowerCase();
       let found = false;
 
+      // AI Response
+      const aiAnswer = generateAIResponse(query);
+      aiText.textContent = aiAnswer;
+      aiResponseDiv.style.display = "block";
+
+      // Search Results
       for (const section in VoltSite) {
         const matches = VoltSite[section].filter(item =>
           item.name.toLowerCase().includes(query) ||
@@ -149,7 +199,10 @@
       }
 
       if (!found) {
-        resultsDiv.innerHTML = `<p>No results found for "${q}".</p>`;
+        const noResult = document.createElement("div");
+        noResult.className = "no-results";
+        noResult.innerHTML = `There are no <b>Wiki</b>s here.`;
+        resultsDiv.appendChild(noResult);
       }
     }
 
