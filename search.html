@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Search - Volt Site</title>
+  <link rel="icon" href="Vevi.png" type="image/png">
   <style>
     body {
       background: #000;
@@ -72,7 +73,7 @@
       text-align: left;
     }
 
-    .result b {
+    .result h2 {
       font-size: 18px;
     }
 
@@ -82,16 +83,16 @@
     }
 
     .result button {
-      background: #fff;
-      color: rgb(20,0,255);
+      background-color: rgba(20, 0, 255, 1);
+      color: rgb(0, 0, 0);
       border: none;
-      padding: 8px 15px;
+      padding: 5px 15px;
       border-radius: 10px;
       cursor: pointer;
     }
 
     .result button:hover {
-      background: #ddd;
+      background-color: rgba(20, 0, 255, 0.5);
     }
 
     .no-results {
@@ -131,8 +132,8 @@
         { name: "Content", desc: "Second layer of content in Volt Site", url: "content.html" },
         { name: "Updates", desc: "View the latest updates in Volt Site", url: "updates.html" }
       ],
-      satelites: [
-        { name: "Example satelite", desc: "This is an example satelite", url: "satelites/Volt/Example.html" }
+      Satelites: [
+        { name: "No Satelites yet", desc: "But you can Create one", url: "Satelites/Create.html" }
       ]
     };
 
@@ -196,7 +197,7 @@
             const div = document.createElement("div");
             div.className = "result";
             div.innerHTML = `
-              <b>${item.name}</b>
+              <h2>${item.name}</h2>
               <h6>${item.desc}</h6>
               <a href="${item.url}" target="_blank"><button>Visit</button></a>
             `;
