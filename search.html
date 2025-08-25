@@ -127,12 +127,12 @@
     const VoltSite = {
       Pages: [
         { name: "Home", desc: "Visit the home page", url: "index.html" },
-        { name: "Satellites", desc: "Explore satellites info on Volt Site", url: "satellites.html" },
+        { name: "Satelites", desc: "Explore satelites on Volt Site", url: "satelites.html" },
         { name: "Content", desc: "Second layer of content in Volt Site", url: "content.html" },
         { name: "Updates", desc: "View the latest updates in Volt Site", url: "updates.html" }
       ],
-      Satellites: [
-        { name: "Example Satellite", desc: "This is an example satellite", url: "Satellites/Volt/Example.html" }
+      satelites: [
+        { name: "Example satelite", desc: "This is an example satelite", url: "satelites/Volt/Example.html" }
       ]
     };
 
@@ -154,11 +154,13 @@
         If you see a bug, report to the admin.
         `;
       } else if (q.includes("hi")) {
-        return "Hello i am Sache AI, nice to meet you."
+        return "Hello i am <b>Sache AI</b>, nice to meet you."
       } else if (q.includes("code")) {
         return "Volt Site uses modular JavaScript objects to organize sections. Search logic parses names and descriptions dynamically.";
       } else if (q.includes("anouncement")) {
-        return "Anouncements are words that developers try to tell you, that is why they always add a by: tag"
+        return "Anouncements are words that developers try to tell you, that is why they always add a "by:" tag."
+      } else if (q.includes("volt"))
+        return "Volt is the creator of <b>Volt Site</b>, you could get admin access depending on luck."
       } else {
         return "Sorry, I was not taught that yet.";
       }
