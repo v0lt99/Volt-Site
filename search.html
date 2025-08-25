@@ -149,8 +149,10 @@
         return `
         <strong>Bugs are everywhere</strong><br><br>
         The two bugs are:<br>
-        &nbsp;&nbsp;- <b>Formal bugs</b>(developer mistakes)<br>
-        &nbsp;&nbsp;- <b>Informal bugs</b>(viruses planted by hackers)<br><br>
+        <ol>
+          <li><b>Formal bugs</b>(developer mistakes)<br></li>
+          <li><b>Informal bugs</b>(viruses planted by hackers)<br><br></li>
+        </ol>
         If you see a bug, report to the admin.
         `;
       } else if (q.includes("hi")) {
@@ -159,7 +161,7 @@
         return `Volt Site uses modular JavaScript objects to organize sections. Search logic parses names and descriptions dynamically.`;
       } else if (q.includes("anouncement")) {
         return `Anouncements are words that developers try to tell you, that is why they always add a "by:" tag.`
-      } else if (q.includes("volt"))
+      } else if (q.includes("volt")) {
         return `Volt is the creator of <b>Volt Site</b>, you could get admin access depending on luck.`
       } else {
         return `Sorry, I was not taught that yet.`;
