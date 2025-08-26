@@ -1,6 +1,6 @@
 site: {
         "name": "Volt-Site",
-        "version": "1.0.9",
+        "version": "1.0.0-beta",
         "description": "A site built by Volt Flare as a copy of Volt-Site on google sites",
         "main": "index.html",
         "scripts": {
