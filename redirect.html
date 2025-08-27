@@ -8,6 +8,54 @@
 <body>
   <h1>You Redirected.</h1>
   <h2>So you are here.</h2>
+  <div id="user-info">Fetching your Discord info...</div>
+  <div class="expdate">Experience: calculating...</div>
   <a href="https://v0lt99.github.io/Volt-Site"><button class="btn">Return to home</button></a>
+
+  <script>
+    // Extract access token from URL hash
+    const hash = window.location.hash;
+    const params = new URLSearchParams(hash.substring(1));
+    const token = params.get("access_token");
+
+    if (token) {
+      fetch("https://discord.com/api/users/@me", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      .then(res => res.json())
+      .then(user => {
+        const userDiv = document.getElementById("user-info");
+        userDiv.innerHTML = `
+          <p>Welcome, <strong>${user.username}</strong></p>
+          <img src="https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png" style="height:80px; border-radius:50%">
+        `;
+        localStorage.setItem("discordUser", JSON.stringify(user));
+      })
+      .catch(() => {
+        document.getElementById("user-info").textContent = "Failed to fetch user info.";
+      });
+    } else {
+      document.getElementById("user-info").textContent = "No access token found.";
+    }
+
+    // Experience tracking
+    let firstVisit = localStorage.getItem("firstVisit");
+    if (!firstVisit) {
+      firstVisit = new Date().toISOString();
+      localStorage.setItem("firstVisit", firstVisit);
+    }
+    const now = new Date();
+    const joined = new Date(firstVisit);
+    const expDays = Math.floor((now - joined) / (1000 * 60 * 60 * 24));
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const expEl = document.querySelector(".expdate");
+      if (expEl) {
+        expEl.textContent = `Experience: ${expDays} day${expDays !== 1 ? 's' : ''}`;
+      }
+    });
+  </script>
 </body>
 </html>
