@@ -5,23 +5,91 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Satelites</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="Vevi.png" type="image/png>
+  <link rel="icon" href="Vevi.png" type="image/png">
 </head>
 <body>
   <h1>Satelites</h1>
+
   <a href="Satelites/Create.html"><button class="btn">Add Satelite</button></a><br><br>
-  <a href="Satelites/Edit.html"><button class="btn">Edit Satelite</button></a><br><br>
+
+  <a href="Satelites/Edit.html"><button class="btn">Edit Satelite</button></a>
+  <button type="file" accept=".vsa" class="btn" onchange="importSatelite(this.files[0])"><br><br>
+
   <main>
     <section id="satelite-gallery" class="gallery">
       <p>There are no <b>Satelites</b> yet</p>
+
       <!--
-      <div>
-        <p class="name">Name</p>
-        <h6 class="description">Description</h6>
+      <div class="satelite" data-vsid="9643">
+        <p class="name">Example</p>
+        <h6 class="description">Demo satellite for testing</h6>
         <a href="https://v0lt99.github.io/Volt-Site/Satelites/Volt/Example.html" target="_blank"><button class="btn">Visit</button></a>
+        <button class="btn" onclick="exportSatelite(this.parentElement)">Export</button>
       </div>
       -->
     </section>
   </main>
+
+  <script>
+    function importSatelite(file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const content = reader.result;
+
+        const name = content.match(/<satname>(.*?)<\/satname>/)?.[1] || "Unnamed";
+        const desc = content.match(/<satdesc>(.*?)<\/satdesc>/)?.[1] || "No description";
+        const url = content.match(/<saturl>(.*?)<\/saturl>/)?.[1] || "#";
+        const vsid = content.match(/<vsid>(.*?)<\/vsid>/)?.[1] || "unknown";
+        const newTag = content.match(/<new[^>]*>/)?.[0] || "";
+        const type = content.match(/type="(.*?)"/)?.[1] || "";
+        const title = content.match(/title="(.*?)"/)?.[1] || "";
+
+        const card = document.createElement("div");
+        card.className = "satelite";
+        card.setAttribute("data-vsid", vsid);
+        card.innerHTML = `
+          <p class="name">${name}</p>
+          <h6 class="description">${desc}</h6>
+          ${newTag ? `<span class="badge">NEW</span>` : ""}
+          <a href="${url}" target="_blank"><button class="btn">Visit</button></a>
+          <button class="btn" onclick="exportSatelite(this.parentElement)">Export</button>
+        `;
+
+        const gallery = document.querySelector("#satelite-gallery");
+        gallery.querySelector("p")?.remove(); // remove "no satelites" message
+        gallery.appendChild(card);
+      };
+      reader.readAsText(file);
+    }
+
+    function exportSatelite(div) {
+      const name = div.querySelector(".name")?.textContent?.trim() || "Unnamed";
+      const desc = div.querySelector(".description")?.textContent?.trim() || "No description";
+      const href = div.querySelector("a")?.getAttribute("href")?.trim() || "#";
+      const vsid = div.getAttribute("data-vsid") || "unknown";
+
+      fetch(href)
+        .then(res => res.text())
+        .then(html => {
+          const titleMatch = html.match(/<title>(.*?)<\/title>/i);
+          const pageTitle = titleMatch ? titleMatch[1] : "Untitled";
+
+          const metadata = `<satname>${name}</satname>\n<satdesc>${desc}</satdesc>\n<saturl>${href}</saturl>\n<new type="page" title="${pageTitle}"></new>\n<vsid>${vsid}</vsid>\n`;
+          const vsaContent = metadata + html;
+
+          const blob = new Blob([vsaContent], { type: "text/plain" });
+          const a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          a.download = `${name}.vsa`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        })
+        .catch(err => {
+          alert("Failed to fetch satellite page.");
+          console.error(err);
+        });
+    }
+  </script>
 </body>
 </html>
