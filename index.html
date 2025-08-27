@@ -7,6 +7,36 @@
   <link rel="icon" href="Vevi.png" type="image/png">
   <link rel="stylesheet" href="style.css">
   <script src="script.js" defer></script>
+  <style>
+    section#user-info {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background-color: rgba(30, 30, 30, 0.85);
+      padding: 10px 14px;
+      border-radius: 12px;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+    }
+
+    img#discord-avatar {
+      height: 40px;
+      width: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+    }
+
+    span#discord-username {
+      font-size: 15px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+  </style>
 </head>
     
 <body>
@@ -22,7 +52,7 @@
       <a href="content.html"><button class="btn">Content</button></a><br>
       <a href="updates.html"><button class="btn">Update Log</button></a><br>
       <!-- User Building! -->
-      <button class="btn" aria-label="Satellite">Satelites</button><br>
+      <a href="satelite.html"><button class="btn">Satelites</button></a><br>
       <!-- Auth -->
       <a href="https://github.com/marketplace/volt-site/upgrade/1/CUSTOMER_ACCOUNT_ID" target="_blank"><button class="btn">Get github app</button></a>
     </nav>
@@ -42,18 +72,23 @@
     <a href="https://github.com/v0lt99/Volt-Site/wiki" target="_blank"><button class="btn">View the wiki</button></a>
     <p>&copy; 2025 Volt Flare. All rights reserved.</p>
   </footer>
+
+  <!-- Discord User Info Section -->
+  <section id="user-info" style="display: none;">
+    <img id="discord-avatar" alt="Discord Avatar">
+    <span id="discord-username"></span>
+  </section>
     
   <script>
-    function down() {
-      const link = document.createElement('a');
-      link.href = 'Volt-Site.zip';
-      link.download = 'Volt-Site.zip';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      alert("✅ Successfully downloaded. Unzip & open 'Volt-Site.html' to view 'Volt-Site_Offline'");
-    }
+    // Load Discord user info from localStorage
+    const user = JSON.parse(localStorage.getItem("discordUser"));
+    if (user && user.id && user.avatar) {
+      const format = user.avatar.startsWith("a_") ? "gif" : "png" : "jpg";
+      const avatarUrl = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${format}`;
+      document.getElementById("discord-avatar").src = avatarUrl;
+      document.getElementById("discord-username").textContent = user.username;
+      document.getElementById("user-info").style.display = "flex";
+    };
   </script>
 </body>
 </html>
