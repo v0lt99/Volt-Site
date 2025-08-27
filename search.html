@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Search - Volt Site</title>
   <link rel="icon" href="Vevi.png" type="image/png">
+
   <style>
     body {
       background: #000;
@@ -14,21 +15,25 @@
       text-align: center;
     }
 
+    /* Branding */
     .brand {
       position: absolute;
       top: 20px;
       left: 20px;
       font-size: 24px;
     }
+
     .brand a {
       color: #fff;
       text-decoration: none;
       font-weight: bold;
     }
 
+    /* Search box */
     .search-box {
       margin-top: 100px;
     }
+
     .search-box input {
       width: 60%;
       padding: 15px;
@@ -39,6 +44,7 @@
       text-align: center;
     }
 
+    /* AI Response */
     #aiResponse {
       margin-top: 40px;
       padding: 20px;
@@ -49,8 +55,10 @@
       margin-left: auto;
       margin-right: auto;
       text-align: left;
+      white-space: pre-wrap;
     }
 
+    /* Results */
     #results {
       margin-top: 40px;
       display: flex;
@@ -82,16 +90,16 @@
       font-weight: normal;
     }
 
-    .result button {
-      background-color: rgba(255, 255, 255, 1);
-      color: rgb(0, 0, 0);
+    .result a button {
+      background-color: #fff;
+      color: #000;
       border: none;
       padding: 5px 15px;
       border-radius: 10px;
       cursor: pointer;
     }
 
-    .result button:hover {
+    .result a button:hover {
       background-color: rgba(255, 255, 255, 0.5);
     }
 
@@ -103,131 +111,158 @@
   </style>
 </head>
 <body>
-  <!-- Branding -->
+
   <div class="brand">
     <a href="index.html">Volt Site</a>
   </div>
 
-  <!-- Search box -->
   <div class="search-box">
     <form id="searchForm">
       <input type="text" id="query" placeholder="Search Volt Site...">
     </form>
   </div>
 
-  <!-- AI Response -->
-  <div id="aiResponse" style="display:none;">
+  <section id="aiResponse" style="display:none;">
     <h3>AI response:</h3>
     <div id="aiText"></div>
-  </div>
+  </section>
 
-  <!-- Results -->
-  <div id="results"></div>
+  <section id="results"></section>
 
   <script>
-    const VoltSite = {
-      Pages: [
-        { name: "Home", desc: "Visit the home page", url: "index.html" },
-        { name: "Satelites", desc: "Explore satelites on Volt Site", url: "satelites.html" },
-        { name: "Content", desc: "Second layer of content in Volt Site", url: "content.html" },
-        { name: "Updates", desc: "View the latest updates in Volt Site", url: "updates.html" }
-      ],
-      Satelites: [
-        { name: "No Satelites yet", desc: "But you can Create one", url: "Satelites/Create.html" }
-      ]
-    };
+    const REPO = 'v0lt99/Volt-Site';
+    let repoFiles = [];
 
-    const searchForm = document.getElementById("searchForm");
-    const queryInput = document.getElementById("query");
-    const resultsDiv = document.getElementById("results");
-    const aiResponseDiv = document.getElementById("aiResponse");
-    const aiText = document.getElementById("aiText");
+    // 1) Load the GitHub repo tree + file contents
+    async function loadRepoIndex() {
+      const treeRes = await fetch(`https://api.github.com/repos/${REPO}/git/trees/main?recursive=1`);
+      const treeJson = await treeRes.json();
+      const blobs = treeJson.tree.filter(f =>
+        f.type === 'blob' && /\.(html|js|css)$/.test(f.path)
+      );
 
-    function generateAIResponse(query) {
-      const q = query.toLowerCase();
+      // Fetch each file's text
+      const fetches = blobs.map(async file => {
+        const rawUrl = `https://raw.githubusercontent.com/${REPO}/main/${file.path}`;
+        const txt = await fetch(rawUrl).then(r => r.ok ? r.text() : '');
+        return { path: file.path, content: txt };
+      });
 
-      if (q.includes("bug")) {
-        return `
-        <strong>Bugs are everywhere</strong><br><br>
-        The two bugs are:<br>
-        <ol>
-          <li><b>Formal bugs</b>(developer mistakes)<br></li>
-          <li><b>Informal bugs</b>(viruses planted by hackers)<br><br></li>
-        </ol>
-        If you see a bug, report to the admin.
-        `;
-      } else if (q.includes("hi")) {
-        return `Hello i am <b>Sache AI</b>, nice to meet you.`
-      } else if (q.includes("code")) {
-        return `Volt Site uses modular JavaScript objects to organize sections. Search logic parses names and descriptions dynamically.`;
-      } else if (q.includes("anouncement")) {
-        return `Anouncements are words that developers try to tell you, that is why they always add a "by:" tag.`
-      } else if (q.includes("volt")) {
-        return `Volt is the creator of <b>Volt Site</b>, you could get admin access depending on luck.`
-      } else {
-        return `Sorry, I was not taught that yet.`;
-      }
+      repoFiles = await Promise.all(fetches);
+      console.log('✅ Repo indexed:', repoFiles.map(f => f.path));
     }
 
-    function renderResults(q) {
-      resultsDiv.innerHTML = "";
-      const query = q.toLowerCase();
+    // 2) Generate AI-style response by scanning the index
+    async function generateAIResponse(query) {
+      query = query.toLowerCase();
+
+      if (!repoFiles.length) {
+        return '🔄 Repository still loading... please wait a moment and search again.';
+      }
+
+      // Find files whose path or content matches
+      const matches = repoFiles.filter(f =>
+        f.path.toLowerCase().includes(query) ||
+        f.content.toLowerCase().includes(query)
+      );
+
+      if (!matches.length) {
+        return '❌ No matches found in the Volt-Site repository.';
+      }
+
+      // Build a snippet list
+      let resp = `🔍 Found ${matches.length} file(s) matching "${query}":\n\n`;
+      matches.slice(0, 5).forEach(f => {
+        const idx = f.content.toLowerCase().indexOf(query);
+        const snippet = idx > -1
+          ? f.content.substr(Math.max(0, idx - 40), query.length + 80).replace(/\n/g, ' ')
+          : '[match in filename]';
+
+        resp += `• ${f.path}\n   …${snippet}…\n\n`;
+      });
+
+      if (matches.length > 5) {
+        resp += `And ${matches.length - 5} more files.`;
+      }
+
+      return resp;
+    }
+
+    // 3) Render results + show AI response
+    async function renderResults(q) {
+      document.getElementById('results').innerHTML = '';
+      document.getElementById('aiResponse').style.display = 'block';
+
+      const aiAnswer = await generateAIResponse(q);
+      document.getElementById('aiText').textContent = aiAnswer;
+
+      // For structure consistency: still list official Pages & Satellites
       let found = false;
-
-      // AI Response
-      const aiAnswer = generateAIResponse(query);
-      aiText.innerHTML = aiAnswer;
-      aiResponseDiv.style.display = "block";
-
-      // Search Results
-      for (const section in VoltSite) {
-        const matches = VoltSite[section].filter(item =>
-          item.name.toLowerCase().includes(query) ||
-          item.desc.toLowerCase().includes(query)
+      ['Pages','Satelites'].forEach(section => {
+        const items = VoltSite[section].filter(item =>
+          item.name.toLowerCase().includes(q.toLowerCase()) ||
+          item.desc.toLowerCase().includes(q.toLowerCase())
         );
 
-        if (matches.length > 0) {
+        if (items.length) {
           found = true;
+          const hdr = document.createElement('h3');
+          hdr.textContent = section;
+          document.getElementById('results').append(hdr);
 
-          const header = document.createElement("h3");
-          header.textContent = section;
-          resultsDiv.appendChild(header);
-
-          matches.forEach(item => {
-            const div = document.createElement("div");
-            div.className = "result";
-            div.innerHTML = `
+          items.forEach(item => {
+            const art = document.createElement('article');
+            art.className = 'result';
+            art.innerHTML = `
               <h2>${item.name}</h2>
               <h6>${item.desc}</h6>
               <a href="${item.url}" target="_blank"><button>Visit</button></a>
             `;
-            resultsDiv.appendChild(div);
+            document.getElementById('results').append(art);
           });
         }
-      }
+      });
 
       if (!found) {
-        const noResult = document.createElement("div");
-        noResult.className = "no-results";
-        noResult.innerHTML = `There are no <b>Services</b> here.`;
-        resultsDiv.appendChild(noResult);
+        const none = document.createElement('article');
+        none.className = 'no-results';
+        none.innerHTML = `There are no <b>Services</b> here.`;
+        document.getElementById('results').append(none);
       }
     }
 
-    // Load query from URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const q = urlParams.get("q");
-    if (q) {
-      queryInput.value = q;
-      renderResults(q);
+    // VoltSite index from your original script
+    const VoltSite = {
+      Pages: [
+        { name: "Home", desc: "Visit the home page", url: "index.html" },
+        { name: "Satelites", desc: "Explore satelites on Volt Site", url: "satelites.html" },
+        { name: "News", desc: "Keep track of news in Volt Site with ease", url: "news.html" },
+        { name: "Content", desc: "Second layer of content in Volt Site", url: "content.html" },
+        { name: "Updates", desc: "View the latest updates in Volt Site", url: "updates.html" }
+      ],
+      Satelites: [
+        { name: "Create", desc: "Create a satelite", url: "Satelites/Create.html" },
+        { name: "Edit", desc: "Edit your satelite, After you verify your VSID", url: "Satelites/Edit.html" }
+      ]
+    };
+
+    // Initialize
+    loadRepoIndex();
+
+    // Handle URL-prefilled query
+    const params = new URLSearchParams(window.location.search);
+    const initialQ = params.get('q');
+    if (initialQ) {
+      document.getElementById('query').value = initialQ;
+      renderResults(initialQ);
     }
 
-    // Handle form submit
-    searchForm.addEventListener("submit", e => {
+    // Form submit
+    document.getElementById('searchForm').addEventListener('submit', e => {
       e.preventDefault();
-      const q = queryInput.value.trim();
+      const q = document.getElementById('query').value.trim();
       if (!q) return;
-      window.history.replaceState({}, "", `?q=${encodeURIComponent(q)}`);
+      window.history.replaceState({}, '', `?q=${encodeURIComponent(q)}`);
       renderResults(q);
     });
   </script>
