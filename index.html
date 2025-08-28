@@ -123,12 +123,12 @@
       if (currentStep < steps.length) {
         showStep(currentStep);
         currentStep++;
-        setTimeout(nextStep, 4000); // Delay between steps
+        setTimeout(nextStep, 10000); // Delay between steps
       } else {
         overlay.style.opacity = "0";
         setTimeout(() => {
           overlay.style.display = "none";
-        }, 12000);
+        }, 10000);
       }
     }
 
