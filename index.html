@@ -1,13 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-16">
+  <meta charset="UTF-8">
   <meta name="v0lt99" content="width=device-width, initial-scale=1.0">
   <title>Volt Site</title>
   <link rel="icon" href="Vevi.png" type="image/png">
   <link rel="stylesheet" href="style.css">
   <script src="script.js" defer></script>
+
   <style>
+    /* Loading Overlay */
+    #loading-overlay {
+      position: fixed;
+      inset: 0;
+      background-color: #1400ff;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      font-size: 22px;
+      z-index: 9999;
+      flex-direction: column;
+      transition: opacity 0.5s ease;
+    }
+
+    #loading-step {
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    /* Discord Info */
     section#user-info {
       position: fixed;
       top: 20px;
@@ -38,38 +61,39 @@
     }
   </style>
 </head>
-    
+
 <body>
+  <!-- Loading Overlay -->
+  <div id="loading-overlay">
+    <div id="loading-step">loading assets</div>
+  </div>
+
   <header>
     <h1>Volt Site</h1>
     <form action="https://v0lt99.github.io/Volt-Site/search.html" method="GET">
       <input type="text" name="q" placeholder="Search Volt Site..." style="border-radius: 10px; background-color: white; padding: 5px 15px">
     </form>
-    
+
     <nav id="nav">
-      <!-- Info(New) -->
       <a href="news.html"><button class="btn">News</button></a>
-      <!-- Page Navigation -->
       <a href="content.html"><button class="btn">Content</button></a><br>
       <a href="updates.html"><button class="btn">Update Log</button></a><br>
-      <!-- User Building! -->
       <a href="satelite.html"><button class="btn">Satelites</button></a><br>
-      <!-- Auth -->
       <a href="https://github.com/marketplace/volt-site/upgrade/1/CUSTOMER_ACCOUNT_ID" target="_blank"><button class="btn">Get github app</button></a>
     </nav>
   </header>
-    
+
   <main>
     <section>
       <h2>Welcome to Volt Site</h2>
       <p>This is a simple site built by <a href="https://github.com/v0lt99" target="_blank">Volt Flare</a>.</p>
-      <iframe src="https://bloxd.io" alt="Play bloxd with friends" style="height: 400px; width: 600px;"></iframe>
+      <iframe src="https://bloxd.io" style="height: 400px; width: 600px;" title="Play bloxd with friends"></iframe>
     </section>
   </main>
-    
+
   <footer>
     <a href="https://v0lt99.github.io/Volt-Site"><img src="qrcode_v0lt99.github.io.svg" style="height: 200px; width: 200px"></a>
-    <p>Scan to visit Volt Site on mobile(easily)</p>
+    <p>Scan to visit Volt Site on mobile (easily)</p>
     <a href="https://github.com/v0lt99/Volt-Site/wiki" target="_blank"><button class="btn">View the wiki</button></a>
     <p>&copy; 2025 Volt Flare. All rights reserved.</p>
   </footer>
@@ -79,17 +103,49 @@
     <img id="discord-avatar" alt="Discord Avatar">
     <span id="discord-username"></span>
   </section>
-    
+
+  <!-- Loading Logic -->
   <script>
-    // Load Discord user info from localStorage
+    const steps = ["loading assets", "initiating scripts", "running site"];
+    const stepElement = document.getElementById("loading-step");
+    const overlay = document.getElementById("loading-overlay");
+
+    let currentStep = 0;
+
+    function showStep(index) {
+      stepElement.style.opacity = 0;
+      setTimeout(() => {
+        stepElement.textContent = steps[index];
+        stepElement.style.opacity = 1;
+      }, 500);
+    }
+
+    function nextStep() {
+      if (currentStep < steps.length) {
+        showStep(currentStep);
+        currentStep++;
+        setTimeout(nextStep, 1200); // Delay between steps
+      } else {
+        overlay.style.opacity = "0";
+        setTimeout(() => {
+          overlay.style.display = "none";
+        }, 60000);
+      }
+    }
+
+    window.addEventListener("load", () => {
+      nextStep();
+    });
+
+    // Discord user info
     const user = JSON.parse(localStorage.getItem("discordUser"));
     if (user && user.id && user.avatar) {
-      const format = user.avatar.startsWith("a_") ? "gif" : "png" : "jpg";
+      const format = user.avatar.startsWith("a_") ? "gif" : "png";
       const avatarUrl = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${format}`;
       document.getElementById("discord-avatar").src = avatarUrl;
       document.getElementById("discord-username").textContent = user.username;
       document.getElementById("user-info").style.display = "flex";
-    };
+    }
   </script>
 </body>
 </html>
