@@ -6,50 +6,35 @@
   <title>Satelites</title>
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="Vevi.png" type="image/png">
-  <style>
-    .badge {
-      display: inline-block;
-      background: #ff0;
-      color: #000;
-      font-weight: bold;
-      padding: 2px 6px;
-      margin-bottom: 5px;
-      border-radius: 4px;
-    }
-    .satelite {
-      border: 1px solid #ccc;
-      padding: 10px;
-      margin: 10px 0;
-      background: #f9f9f9;
-    }
-  </style>
 </head>
 <body>
   <h1>Satelites</h1>
 
   <a href="Satelites/Create.html"><button class="btn">Add Satelite</button></a><br><br>
   <a href="Satelites/Edit.html"><button class="btn">Edit Satelite</button></a><br><br>
+
   <form onsubmit="handleImport(event)">
     <input type="file" accept=".vsa" id="vsaFileInput"><br>
     <button type="submit" class="btn">Import</button>
   </form><br><br>
 
   <main>
-    <section id="satelite-gallery" class="gallery">
-      <p>There are no <b>Satelites</b> yet</p>
-
-      <!--
-      <div class="satelite" data-vsid="9643">
-        <p class="name">Example</p>
-        <h6 class="description">Demo satellite for testing</h6>
-        <a href="https://v0lt99.github.io/Volt-Site/Satelites/Volt/Example.html" target="_blank"><button class="btn">Visit</button></a>
-        <button class="btn" onclick="exportSatelite(this.parentElement)">Export</button>
-      </div>
-      -->
+    <section id="satelite-gallery">
+      <p id="empty-msg">There are no <b>Satelites</b> yet</p>
     </section>
   </main>
 
   <script>
+    // Load saved cards and HTML previews
+    window.addEventListener("DOMContentLoaded", () => {
+      const savedCards = localStorage.getItem("volt_satelites");
+      if (savedCards) {
+        const gallery = document.getElementById("satelite-gallery");
+        document.getElementById("empty-msg")?.remove();
+        gallery.innerHTML += savedCards;
+      }
+    });
+
     function handleImport(event) {
       event.preventDefault();
 
@@ -66,36 +51,51 @@
 
         const name = content.match(/<satname>(.*?)<\/satname>/)?.[1] || "Unnamed";
         const desc = content.match(/<satdesc>(.*?)<\/satdesc>/)?.[1] || "No description";
-        const url = content.match(/<saturl>(.*?)<\/saturl>/)?.[1] || "#";
         const vsid = content.match(/<vsid>(.*?)<\/vsid>/)?.[1] || "0000";
-        const newTag = content.match(/<new[^>]*>/)?.[0] || "";
+        const htmlStart = content.indexOf("<!DOCTYPE html>");
+        const fullHTML = htmlStart >= 0 ? content.slice(htmlStart) : "<p>No HTML found</p>";
 
         if (!/^\d{4}$/.test(vsid)) {
           alert("Invalid VSID. Must be exactly 4 digits.");
           return;
         }
 
-        const card = document.createElement("div");
-        card.className = "satelite";
-        card.setAttribute("data-vsid", vsid);
-        card.innerHTML = `
-          <p class="name">${name}</p>
-          <h6 class="description">${desc}</h6>
-          ${newTag ? `<span class="badge">NEW</span>` : ""}
-          <a href="${url}" target="_blank"><button class="btn">Visit</button></a>
-          <button class="btn" onclick="exportSatelite(this.parentElement)">Export</button>
+        const cardHTML = `
+          <div data-vsid="${vsid}">
+            <p>Name: ${name}</p>
+            <h6>Description: ${desc}</h6>
+            <button class="btn" onclick="openPreview('${vsid}')">Preview</button>
+            <button class="btn" onclick="exportSatelite(this.parentElement)">Export</button>
+          </div>
         `;
 
-        const gallery = document.querySelector("#satelite-gallery");
-        gallery.querySelector("p")?.remove();
-        gallery.appendChild(card);
+        const gallery = document.getElementById("satelite-gallery");
+        document.getElementById("empty-msg")?.remove();
+        gallery.innerHTML += cardHTML;
+
+        const existingCards = localStorage.getItem("volt_satelites") || "";
+        localStorage.setItem("volt_satelites", existingCards + cardHTML);
+        localStorage.setItem(`volt_html_${vsid}`, fullHTML);
       };
       reader.readAsText(file);
     }
 
+    function openPreview(vsid) {
+      const html = localStorage.getItem(`volt_html_${vsid}`);
+      if (!html) {
+        alert("No preview available.");
+        return;
+      }
+
+      const previewWindow = window.open("", "_blank");
+      previewWindow.document.open();
+      previewWindow.document.write(html);
+      previewWindow.document.close();
+    }
+
     function exportSatelite(div) {
-      const name = div.querySelector(".name")?.textContent?.trim() || "Unnamed";
-      const desc = div.querySelector(".description")?.textContent?.trim() || "No description";
+      const name = div.querySelector("p")?.textContent?.replace("Name: ", "").trim() || "Unnamed";
+      const desc = div.querySelector("h6")?.textContent?.replace("Description: ", "").trim() || "No description";
       const href = div.querySelector("a")?.getAttribute("href")?.trim() || "#";
       const vsid = div.getAttribute("data-vsid") || "0000";
 
@@ -105,12 +105,12 @@
       }
 
       fetch(href)
-        .then(res => res.text())
+        .then(res => {
+          if (!res.ok) throw new Error("Failed to fetch page");
+          return res.text();
+        })
         .then(html => {
-          const titleMatch = html.match(/<title>(.*?)<\/title>/i);
-          const pageTitle = titleMatch ? titleMatch[1] : "Untitled";
-
-          const metadata = `<satname>${name}</satname>\n<satdesc>${desc}</satdesc>\n<saturl>${href}</saturl>\n<new type="page" title="${pageTitle}"></new>\n<vsid>${vsid}</vsid>\n`;
+          const metadata = `<satname>${name}</satname>\n<satdesc>${desc}</satdesc>\n<saturl>${href}</saturl>\n<vsid>${vsid}</vsid>\n`;
           const vsaContent = metadata + html;
 
           const blob = new Blob([vsaContent], { type: "text/plain" });
@@ -122,7 +122,7 @@
           document.body.removeChild(a);
         })
         .catch(err => {
-          alert("Failed to fetch satellite page.");
+          alert("Could not fetch satellite page.");
           console.error(err);
         });
     }
