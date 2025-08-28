@@ -10,14 +10,13 @@
   <style>
     /* Loading Overlay */
     #loading-overlay {
-      padding: 100%;
       position: fixed;
       inset: 0;
       background-color: #1400ff;
       color: white;
       display: flex;
       justify-content: center;
-      text-allign: center;
+      align-items: center;
       font-family: Arial, sans-serif;
       font-size: 22px;
       z-index: 9999;
@@ -65,7 +64,7 @@
 <body>
   <!-- Loading Overlay -->
   <span id="loading-overlay">
-    <p id="loading-step">loading assets</p>
+    <span id="loading-step">loading assets</span>
   </span>
 
   <header>
@@ -124,12 +123,12 @@
       if (currentStep < steps.length) {
         showStep(currentStep);
         currentStep++;
-        setTimeout(nextStep, 1200); // Delay between steps
+        setTimeout(nextStep, 4000); // Delay between steps
       } else {
         overlay.style.opacity = "0";
         setTimeout(() => {
           overlay.style.display = "none";
-        }, 60000);
+        }, 12000);
       }
     }
 
