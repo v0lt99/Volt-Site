@@ -71,7 +71,7 @@
     <span style="background-color: #000000; position: fixed; width: 100%; top: 0px;">
         <h1>Volt Site</h1>
         <form action="https://v0lt99.github.io/Volt-Site/search.html" method="GET">
-          <input type="text" name="q" placeholder="Search Volt Site..." style="border-radius: 10px; background-color: white; padding: 5px 15px">
+          <input id="search" type="text" name="q" placeholder="Search Volt Site..." style="border-radius: 10px; background-color: white; padding: 5px 15px">
         </form>
     </span><br><br><br><br><br><br>
     
@@ -87,12 +87,12 @@
     <section>
       <h2>Welcome to Volt Site</h2>
       <p>This is a simple site built by <a href="https://github.com/v0lt99" target="_blank">Volt Flare</a>.</p>
-      <iframe id="bloxd.io" src="https://bloxd.io" style="height: 400px; width: 600px;" title="Play bloxd with friends"></iframe>
+      <iframe id="bloxd.io" src="https://bloxd.io" style="height: 400px; width: 600px;" alt="Play bloxd with friends"></iframe>
     </section>
   </main>
 
   <footer>
-    <a href="https://v0lt99.github.io/Volt-Site"><img src="qrcode_v0lt99.github.io.svg" style="height: 200px; width: 200px"></a>
+    <a href="https://v0lt99.github.io/Volt-Site"><img alt="qrcode" src="qrcode_v0lt99.github.io.svg" style="height: 200px; width: 200px"></a>
     <p>Scan to visit Volt Site on mobile (easily)</p>
     <a href="https://github.com/v0lt99/Volt-Site/wiki" target="_blank"><button class="btn">View the wiki</button></a>
     <p>&copy; 2025 Volt Flare. All rights reserved.</p>
@@ -106,7 +106,7 @@
 
   <!-- Loading Logic -->
   <script>
-    const steps = ["Loading Assets", "Initiating Scripts", "Running Site"];
+    const steps = ["Loading Assets", "Initiating Scripts", "Launching Site"];
     const stepElement = document.getElementById("loading-step");
     const overlay = document.getElementById("loading-overlay");
 
