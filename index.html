@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="v0lt99" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="v0lt99">
+  <meta name="name" content="Volt Site">
+  <meta name="description" content="Volt Site is a simple site created by v0lt99"
   <title>Volt Site</title>
   <link rel="icon" href="Vevi.png" type="image/png">
   <link rel="stylesheet" href="style.css">
@@ -10,6 +12,7 @@
   <style>
     /* Loading Overlay */
     #loading-overlay {
+      padding: 100%;
       position: fixed;
       inset: 0;
       background-color: #1400ff;
@@ -58,6 +61,34 @@
       font-weight: 500;
       white-space: nowrap;
     }
+
+    /* UV Light Block */
+    #uv-light {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      background-color: #1400ff;
+      border-radius: 8px;
+      cursor: grab;
+      z-index: 1001;
+      box-shadow: none;
+      transition: box-shadow 0.3s ease;
+    }
+
+    /* Hidden UV Elements */
+    .uv {
+      visibility: hidden;
+      transition: visibility 0.3s ease;
+      font-family: Arial, sans-serif;
+      font-size: 18px;
+      color: #fff;
+      background-color: #333;
+      padding: 8px 12px;
+      border-radius: 6px;
+      position: absolute;
+    }
   </style>
 </head>
 
@@ -67,10 +98,13 @@
     <span id="loading-step">loading assets</span>
   </span>
 
+  <!-- UV Light Block -->
+  <div id="uv-light"></div>
+
   <header>
-    <span style="background-color: #000000; position: fixed; width: 100%; top: 0px;">
+    <span style="background-color: #000000; position: fixed; margin: 5px; width: 100%; top: 0px;">
         <h1>Volt Site</h1>
-        <form action="https://v0lt99.github.io/Volt-Site/search.html" method="GET">
+        <form action="search.html" method="GET">
           <input id="search" type="text" name="q" placeholder="Search Volt Site..." style="border-radius: 10px; background-color: white; padding: 5px 15px">
         </form>
     </span><br><br><br><br><br><br>
@@ -104,7 +138,7 @@
     <span id="discord-username"></span>
   </section>
 
-  <!-- Loading Logic -->
+  <!-- Scripts -->
   <script>
     const steps = ["Loading Assets", "Initiating Scripts", "Launching Site"];
     const stepElement = document.getElementById("loading-step");
@@ -124,7 +158,7 @@
       if (currentStep < steps.length) {
         showStep(currentStep);
         currentStep++;
-        setTimeout(nextStep, 5000); // Delay between steps
+        setTimeout(nextStep, 5000);
       } else {
         overlay.style.opacity = "0";
         setTimeout(() => {
@@ -146,6 +180,51 @@
       document.getElementById("discord-username").textContent = user.username;
       document.getElementById("user-info").style.display = "flex";
     }
-  </script>
-</body>
-</html>
+
+    // UV Light Logic
+    const uvLight = document.getElementById("uv-light");
+    let isGlowing = false;
+    let offsetX, offsetY;
+    let isDragging = false;
+
+    uvLight.addEventListener("click", () => {
+      isGlowing = !isGlowing;
+      uvLight.style.boxShadow = isGlowing
+        ? "0 0 20px 10px rgba(20, 0, 255, 0.6)"
+        : "none";
+      updateUVVisibility();
+    });
+
+    uvLight.addEventListener("mousedown", (e) => {
+      isDragging = true;
+      offsetX = e.clientX - uvLight.offsetLeft;
+      offsetY = e.clientY - uvLight.offsetTop;
+      uvLight.style.cursor = "grabbing";
+    });
+
+    document.addEventListener("mouseup", () => {
+      isDragging = false;
+      uvLight.style.cursor = "grab";
+    });
+
+    document.addEventListener("mousemove", (e) => {
+      if (isDragging) {
+        uvLight.style.left = `${e.clientX - offsetX}px`;
+        uvLight.style.top = `${e.clientY - offsetY}px`;
+        if (isGlowing) updateUVVisibility();
+      }
+    });
+
+    function updateUVVisibility() {
+      const lightRect = uvLight.getBoundingClientRect();
+      const uvElements = document.querySelectorAll(".uv");
+
+      uvElements.forEach((el) => {
+        const elRect = el.getBoundingClientRect();
+        const dx = elRect.left + elRect.width / 2 - (lightRect.left + lightRect.width / 2);
+        const dy = elRect.top + elRect.height / 2 - (lightRect.top + lightRect.height / 2);
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        el.style.visibility = isGlowing && distance <= 60 ? "visible" : "hidden";
+      });
+    }
