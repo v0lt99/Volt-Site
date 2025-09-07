@@ -3,8 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="author" content="v0lt99">
-  <meta name="name" content="Volt Site">
-  <meta name="description" content="Volt Site is a simple site created by v0lt99">
   <title>Volt Site</title>
   <link rel="icon" href="Vevi.png" type="image/png">
   <link rel="stylesheet" href="style.css">
@@ -12,7 +10,6 @@
   <style>
     /* Loading Overlay */
     #loading-overlay {
-      padding: 100%;
       position: fixed;
       inset: 0;
       background-color: #1400ff;
@@ -31,6 +28,36 @@
       opacity: 0;
       transition: opacity 0.5s ease;
     }
+
+    /* Discord Info */
+    section#user-info {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background-color: rgba(30, 30, 30, 0.85);
+      padding: 10px 14px;
+      border-radius: 12px;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+    }
+
+    img#discord-avatar {
+      height: 40px;
+      width: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+    }
+
+    span#discord-username {
+      font-size: 15px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
   </style>
 </head>
 
@@ -41,9 +68,9 @@
   </span>
 
   <header>
-    <span style="background-color: #000000; position: fixed; margin: 5px; width: 100%; top: 0px;">
-        <h1>Volt Site&trade;</h1>
-        <form action="search.html" method="GET">
+    <span style="background-color: #000000; position: fixed; width: 100%; top: 0px;">
+        <h1>Volt Site</h1>
+        <form action="https://v0lt99.github.io/Volt-Site/search.html" method="GET">
           <input id="search" type="text" name="q" placeholder="Search Volt Site..." style="border-radius: 10px; background-color: white; padding: 5px 15px">
         </form>
     </span><br><br><br><br><br><br>
@@ -71,7 +98,13 @@
     <p>&copy; 2025 Volt Flare. All rights reserved.</p>
   </footer>
 
-  <!-- Scripts -->
+  <!-- Discord User Info Section -->
+  <section id="user-info" style="display: none;">
+    <img id="discord-avatar" alt="Discord Avatar">
+    <span id="discord-username"></span>
+  </section>
+
+  <!-- Loading Logic -->
   <script>
     const steps = ["Loading Assets", "Initiating Scripts", "Launching Site"];
     const stepElement = document.getElementById("loading-step");
@@ -91,7 +124,7 @@
       if (currentStep < steps.length) {
         showStep(currentStep);
         currentStep++;
-        setTimeout(nextStep, 5000);
+        setTimeout(nextStep, 5000); // Delay between steps
       } else {
         overlay.style.opacity = "0";
         setTimeout(() => {
@@ -103,4 +136,16 @@
     window.addEventListener("load", () => {
       nextStep();
     });
+
+    // Discord user info
+    const user = JSON.parse(localStorage.getItem("discordUser"));
+    if (user && user.id && user.avatar) {
+      const format = user.avatar.startsWith("a_") ? "gif" : "png";
+      const avatarUrl = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${format}`;
+      document.getElementById("discord-avatar").src = avatarUrl;
+      document.getElementById("discord-username").textContent = user.username;
+      document.getElementById("user-info").style.display = "flex";
+    }
   </script>
+</body>
+</html>
