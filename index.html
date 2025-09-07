@@ -71,12 +71,6 @@
     <p>&copy; 2025 Volt Flare. All rights reserved.</p>
   </footer>
 
-  <!-- Discord User Info Section -->
-  <section id="user-info" style="display: none;">
-    <img id="discord-avatar" alt="Discord Avatar">
-    <span id="discord-username"></span>
-  </section>
-
   <!-- Scripts -->
   <script>
     const steps = ["Loading Assets", "Initiating Scripts", "Launching Site"];
@@ -109,61 +103,4 @@
     window.addEventListener("load", () => {
       nextStep();
     });
-
-    // Discord user info
-    const user = JSON.parse(localStorage.getItem("discordUser"));
-    if (user && user.id && user.avatar) {
-      const format = user.avatar.startsWith("a_") ? "gif" : "png";
-      const avatarUrl = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${format}`;
-      document.getElementById("discord-avatar").src = avatarUrl;
-      document.getElementById("discord-username").textContent = user.username;
-      document.getElementById("user-info").style.display = "flex";
-    }
-
-    // UV Light Logic
-    const uvLight = document.getElementById("uv-light");
-    let isGlowing = false;
-    let offsetX, offsetY;
-    let isDragging = false;
-
-    uvLight.addEventListener("click", () => {
-      isGlowing = !isGlowing;
-      uvLight.style.boxShadow = isGlowing
-        ? "0 0 20px 10px rgba(20, 0, 255, 0.6)"
-        : "none";
-      updateUVVisibility();
-    });
-
-    uvLight.addEventListener("mousedown", (e) => {
-      isDragging = true;
-      offsetX = e.clientX - uvLight.offsetLeft;
-      offsetY = e.clientY - uvLight.offsetTop;
-      uvLight.style.cursor = "grabbing";
-    });
-
-    document.addEventListener("mouseup", () => {
-      isDragging = false;
-      uvLight.style.cursor = "grab";
-    });
-
-    document.addEventListener("mousemove", (e) => {
-      if (isDragging) {
-        uvLight.style.left = `${e.clientX - offsetX}px`;
-        uvLight.style.top = `${e.clientY - offsetY}px`;
-        if (isGlowing) updateUVVisibility();
-      }
-    });
-
-    function updateUVVisibility() {
-      const lightRect = uvLight.getBoundingClientRect();
-      const uvElements = document.querySelectorAll(".uv");
-
-      uvElements.forEach((el) => {
-        const elRect = el.getBoundingClientRect();
-        const dx = elRect.left + elRect.width / 2 - (lightRect.left + lightRect.width / 2);
-        const dy = elRect.top + elRect.height / 2 - (lightRect.top + lightRect.height / 2);
-        const distance = Math.sqrt(dx * dx + dy * dy);
-
-        el.style.visibility = isGlowing && distance <= 60 ? "visible" : "hidden";
-      });
-    }
+  </script>
