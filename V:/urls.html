@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>V:/urls</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>V:/urls</header>
+  <main>
+    <span class="search-box">
+      <input type="text" id="search" placeholder="Search URLs..." oninput="filterTable()" />
+    </span>
+
+    <table id="urlTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><a href="version.html">Version</a></td>
+          <td>View the version and similar info about it.</td>
+        </tr>
+      </tbody>
+    </table>
+  </main>
+
+  <script>
+    function filterTable() {
+      const input = document.getElementById("search").value.toLowerCase();
+      const rows = document.querySelectorAll("#urlTable tbody tr");
+
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(input) ? "" : "none";
+      });
+    }
+  </script>
+</body>
+</html>
